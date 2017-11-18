@@ -107,6 +107,8 @@ def randomFlash(strip, wait_ms=50):
     for i in range(0, strip.numPixels()):
         if random.randint(0, 1):
             strip.setPixelColor(i, Color(255, 0, 0))
+        else:
+            strip.setPixelColor(i, Color(0, 0, 255))
     time.sleep(wait_ms/1000.0)
 
 # Main program logic follows:
@@ -130,15 +132,5 @@ if __name__ == '__main__':
 
     print('Press Ctrl-C to quit.')
     while True:
-        print('Color wipe animations.')
-        colorWipe(strip, Color(255, 0, 0))  # Red wipe
-        colorWipe(strip, Color(0, 255, 0))  # Blue wipe
-        colorWipe(strip, Color(0, 0, 255))  # Green wipe
-        print('Theater chase animations.')
-        theaterChase(strip, Color(127, 127, 127))  # White theater chase
-        theaterChase(strip, Color(127, 0, 0))  # Red theater chase
-        theaterChase(strip, Color(0, 0, 127))  # Blue theater chase
-        print('Rainbow animations.')
-        rainbow(strip)
-        rainbowCycle(strip)
-        theaterChaseRainbow(strip)
+        print('Random flash')
+        randomFlash(strip)
