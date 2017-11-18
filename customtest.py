@@ -133,4 +133,4 @@ if __name__ == '__main__':
 
     print('Press Ctrl-C to quit.')
     while True:
-        randomFlash(strip, Color(0, 125, 0))
+        randomFlash(strip, 0)
