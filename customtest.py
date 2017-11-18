@@ -112,6 +112,19 @@ def randomFlash(strip, color, wait_ms=50):
     strip.show()
     time.sleep(wait_ms/1000.0)
 
+
+def randomFlashBig(strip, color, wait_ms=50):
+    for i in range(0, strip.numPixels(), 4):
+        if not random.randint(0, 4):
+            for j in range(4):
+                strip.setPixelColor(i+j, wheel(random.randint(0, 255)))
+        else:
+            for j in range(4):
+                strip.setPixelColor(i+j, color)
+    strip.show()
+    time.sleep(wait_ms/1000.0)
+
+
 # Main program logic follows:
 if __name__ == '__main__':
     # Process arguments
@@ -133,4 +146,4 @@ if __name__ == '__main__':
 
     print('Press Ctrl-C to quit.')
     while True:
-        randomFlash(strip, 0)
+        randomFlashBig(strip, 0)
