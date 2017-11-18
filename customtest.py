@@ -113,7 +113,7 @@ def randomFlash(strip, color, wait_ms=50):
     time.sleep(wait_ms/1000.0)
 
 
-def randomFlashBig(strip, color, wait_ms=50):
+def randomFlashBig(strip, color, wait_ms=100):
     for i in range(0, strip.numPixels(), 4):
         if not random.randint(0, 4):
             c = wheel(random.randint(0, 255))
