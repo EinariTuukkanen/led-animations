@@ -134,4 +134,4 @@ if __name__ == '__main__':
     print('Press Ctrl-C to quit.')
     while True:
         print('Random flash')
-        colorWipe(strip, Color(255, 0, 0))  # Red wipe
+        randomFlash(strip)
