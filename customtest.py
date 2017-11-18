@@ -103,10 +103,10 @@ def theaterChaseRainbow(strip, wait_ms=50):
                 strip.setPixelColor(i+q, 0)
 
 
-def randomFlash(strip, wait_ms=50):
+def randomFlash(strip, wait_ms=100):
     for i in range(0, strip.numPixels()):
-        if random.randint(0, 1):
-            strip.setPixelColor(i, Color(255, 0, 0))
+        if not random.randint(0, 2):
+            strip.setPixelColor(i, wheel(random.randint(0, 255)))
         else:
             strip.setPixelColor(i, 0)
     strip.show()
@@ -133,5 +133,4 @@ if __name__ == '__main__':
 
     print('Press Ctrl-C to quit.')
     while True:
-        print('Random flash')
         randomFlash(strip)
