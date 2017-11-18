@@ -147,4 +147,7 @@ if __name__ == '__main__':
 
     print('Press Ctrl-C to quit.')
     while True:
-        randomFlashBig(strip, 0)
+        for i in range(0, 100):
+            randomFlashBig(strip, 0)
+        for i in range(0, 100):
+            randomFlash(strip, 0)
