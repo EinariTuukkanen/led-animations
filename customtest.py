@@ -172,12 +172,12 @@ if __name__ == '__main__':
 
     print('Press Ctrl-C to quit.')
     while True:
-        # for i in range(0, 100):
-        #     randomFlashBig(strip, 0)
-        # for i in range(0, 100):
-        #     randomFlash(strip, 0)
-        t1 = threading.Thread(target=beam, args=(strip, Color(255, 0, 0), 50, 51, 100, False, False))
-        t2 = threading.Thread(target=beam, args=(strip, Color(255, 0, 0), 50, 0, 49, True, False))
-        t1.start()
-        t2.start()
-        time.sleep(1)
+        for i in range(0, 100):
+            randomFlashBig(strip, 0)
+        for i in range(0, 100):
+            randomFlash(strip, 0)
+        t = threading.Thread(target=colorBeam, args=(strip, Color(255, 0, 0)))
+        t.start()
+        time.sleep(0.1)
+        t = threading.Thread(target=colorBeam, args=(strip, Color(255, 255, 0)))
+        t.start()
