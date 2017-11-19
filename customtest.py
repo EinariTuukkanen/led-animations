@@ -46,6 +46,16 @@ def colorWipe(strip, color, wait_ms=50):
         time.sleep(wait_ms/1000.0)
 
 
+def colorBeam(strip, color, wait_ms=50):
+    """Shoots color across display a pixel at a time."""
+    for i in range(strip.numPixels()):
+        if i > 0:
+            strip.setPixelColor(i - 1, 0)
+        strip.setPixelColor(i, color)
+        strip.show()
+        time.sleep(wait_ms/1000.0)
+
+
 def theaterChase(strip, color, wait_ms=50, iterations=10):
     """Movie theater light style chaser animation."""
     for j in range(iterations):
@@ -151,3 +161,6 @@ if __name__ == '__main__':
             randomFlashBig(strip, 0)
         for i in range(0, 100):
             randomFlash(strip, 0)
+        colorBeam(strip, Color(255, 0, 0))
+        colorBeam(strip, Color(0, 255, 0))
+        colorBeam(strip, Color(0, 0, 255))
