@@ -137,6 +137,20 @@ def randomFlashBig(strip, color, wait_ms=100):
     time.sleep(wait_ms/1000.0)
 
 
+def beam(strip, color, wait_ms=50, start=0, end=0, reverse=False, track=False):
+    """Wipe color across display a pixel at a time."""
+    end = end if end > start else strip.numPixels()
+    rng = range(start, end)
+    if reverse:
+        rng = reversed(rng)
+    for i in rng:
+        if not track and i > 0:
+            strip.setPixelColor(i - 1, 0)
+        strip.setPixelColor(i, color)
+        strip.show()
+        time.sleep(wait_ms/1000.0)
+
+
 # Main program logic follows:
 if __name__ == '__main__':
     # Process arguments
@@ -158,12 +172,11 @@ if __name__ == '__main__':
 
     print('Press Ctrl-C to quit.')
     while True:
-        for i in range(0, 100):
-            randomFlashBig(strip, 0)
-        for i in range(0, 100):
-            randomFlash(strip, 0)
-        t = threading.Thread(target=colorBeam, args=(strip, Color(255, 0, 0)))
-        t.start()
-        time.sleep(0.1)
-        t = threading.Thread(target=colorBeam, args=(strip, Color(255, 255, 0)))
-        t.start()
+        # for i in range(0, 100):
+        #     randomFlashBig(strip, 0)
+        # for i in range(0, 100):
+        #     randomFlash(strip, 0)
+        t1 = threading.Thread(target=beam, args=(strip, Color(255, 0, 0), start=51, end=100))
+        t2 = threading.Thread(target=beam, args=(strip, Color(255, 0, 0), start=0, end=49, reverse=True))
+        t1.start()
+        t2.start()
