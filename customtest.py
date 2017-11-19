@@ -180,3 +180,4 @@ if __name__ == '__main__':
         t2 = threading.Thread(target=beam, args=(strip, Color(255, 0, 0), start=0, end=49, reverse=True))
         t1.start()
         t2.start()
+        time.sleep(1)
