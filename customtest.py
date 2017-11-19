@@ -176,8 +176,8 @@ if __name__ == '__main__':
         #     randomFlashBig(strip, 0)
         # for i in range(0, 100):
         #     randomFlash(strip, 0)
-        t1 = threading.Thread(target=beam, args=(strip, Color(255, 0, 0), start=51, end=100))
-        t2 = threading.Thread(target=beam, args=(strip, Color(255, 0, 0), start=0, end=49, reverse=True))
+        t1 = threading.Thread(target=beam, args=(strip, Color(255, 0, 0), 50, 51, 100, False, False))
+        t2 = threading.Thread(target=beam, args=(strip, Color(255, 0, 0), 50, 0, 49, True, False))
         t1.start()
         t2.start()
         time.sleep(1)
