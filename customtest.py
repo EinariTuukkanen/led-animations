@@ -1,5 +1,6 @@
 import time
 import random
+import threading
 
 from neopixel import *
 
@@ -161,6 +162,8 @@ if __name__ == '__main__':
             randomFlashBig(strip, 0)
         for i in range(0, 100):
             randomFlash(strip, 0)
-        colorBeam(strip, Color(255, 0, 0))
-        colorBeam(strip, Color(0, 255, 0))
-        colorBeam(strip, Color(0, 0, 255))
+        t = threading.Thread(target=colorBeam, args=(strip, Color(255, 0, 0)))
+        t.start()
+        time.sleep(0.1)
+        t = threading.Thread(target=colorBeam, args=(strip, Color(255, 255, 0)))
+        t.start()
