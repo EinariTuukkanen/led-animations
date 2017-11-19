@@ -46,7 +46,7 @@ def colorWipe(strip, color, wait_ms=50):
         time.sleep(wait_ms/1000.0)
 
 
-def colorBeam(strip, color, wait_ms=50):
+def colorBeam(strip, color, wait_ms=20):
     """Shoots color across display a pixel at a time."""
     for i in range(strip.numPixels()):
         if i > 0:
