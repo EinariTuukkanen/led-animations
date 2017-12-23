@@ -63,5 +63,7 @@ def main(stdscr):
             # return curser to start position
             stdscr.move(0, 0)
             strip.single_color(Color(255, 0, 0))
+        else:
+            strip.single_color(Color(0, 0, 0))
 
 curses.wrapper(main)
