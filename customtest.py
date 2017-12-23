@@ -10,7 +10,7 @@ import sys
 
 
 def signal_handler(signal, frame):
-        colorWipe(strip, Color(0, 0, 0))
+        colorWipe(strip, Color(0, 0, 0), 5)
         sys.exit(0)
 
 
@@ -151,6 +151,113 @@ def beam(strip, color, wait_ms=50, start=0, end=0, reverse=False, track=False):
         time.sleep(wait_ms/1000.0)
 
 
+def police(strip, color1, color2, wait_ms=50):
+    half = int(strip.numPixels() / 2)
+    for i in range(0, half):
+        strip.setPixelColor(i, color1)
+    for i in range(half, strip.numPixels()):
+        strip.setPixelColor(i, 0)
+    strip.show()
+    time.sleep(wait_ms/1000.0)
+    for i in range(0, half):
+        strip.setPixelColor(i, 0)
+    for i in range(half, strip.numPixels()):
+        strip.setPixelColor(i, color2)
+    strip.show()
+    time.sleep(wait_ms/1000.0)
+
+
+def fib(n):
+    if n == 0:
+        return 1
+    if n == 1:
+        return 1
+    else:
+        return fib(n - 1) + fib(n - 2)
+
+# fibs = []
+# for i in range(0, 30):
+#     fibs = fibs + [fib(i)]
+
+def osku(strip, iterations=1, wait_ms=50):
+    """Draw rainbow that uniformly distributes itself across all pixels."""
+    num = strip.numPixels()
+    for i in range(256*iterations):
+        j = 0
+        n = 0
+        #s = [0]*num
+        while n < num:
+            for k in range(0, fibs[j]):
+                strip.setPixelColor(
+                    (n + i) % strip.numPixels(),
+                    Color(255, 255, 255)
+                )
+                #s[(n + i) % 200] = "0"
+                n += 1
+            j += 1
+            #s[(n + i) % 200] = "1"
+            strip.setPixelColor(
+                    (n + i) % strip.numPixels(),
+                    wheel((int(n * 256 / strip.numPixels()) + i) & 255)
+                )
+            n += 1
+        #print(''.join(s))
+
+        strip.show()
+        time.sleep(wait_ms/1000.0)
+
+
+def strobo(strip, color, wait_ms=50):
+    for i in range(0, strip.numPixels()):
+        strip.setPixelColor(i, color)
+    strip.show()
+    time.sleep(wait_ms/1000.0)
+    for i in range(0, strip.numPixels()):
+        strip.setPixelColor(i, 0)
+    strip.show()
+    time.sleep(wait_ms/1000.0)
+
+
+def fade_in(strip, color, wait_ms=10):
+    for i in range(0, strip.numPixels()):
+        strip.setPixelColor(i, color)
+    for a in range(0, 255, 5):
+        strip.setBrightness(a)
+        strip.show()
+        time.sleep(wait_ms/1000.0)
+
+
+def fade(strip, color, wait_ms=10):
+    for i in range(0, strip.numPixels()):
+        strip.setPixelColor(i, color)
+    for a in range(0, 255, 5):
+        strip.setBrightness(a)
+        strip.show()
+        time.sleep(wait_ms/1000.0)
+    for a in reversed(range(0, 255, 5)):
+        strip.setBrightness(a)
+        strip.show()
+        time.sleep(wait_ms/1000.0)
+    strip.setBrightness(LED_BRIGHTNESS)
+
+
+def center_beam(strip, color, wait_ms=20, track=False):
+    half = int(strip.numPixels()/2)
+    prevl = -1
+    prevr = 1
+    for i in range(0, half):
+        if prevr >= 0 and not track:
+            strip.setPixelColor(prevr, 0)
+        prevr = half + i
+        strip.setPixelColor(half + i, color)
+        if prevl >= 0 and not track:
+            strip.setPixelColor(prpyevl, 0)
+        prevl = half - i
+        strip.setPixelColor(half - i, color)
+        strip.show()
+        time.sleep(wait_ms/1000.0)
+
+
 # Main program logic follows:
 if __name__ == '__main__':
     # Process arguments
@@ -172,12 +279,25 @@ if __name__ == '__main__':
 
     print('Press Ctrl-C to quit.')
     while True:
+        # osku(strip)
+        for i in range(0, 255, 50):
+            center_beam(strip, wheel(i), 5, True)
+        for i in range(0, 255, 50):
+            fade(strip, wheel(i))
+        for i in range(0, 50):
+            strobo(strip, Color(255, 255, 255))
+        for i in range(0, 50):
+            police(strip, Color(255, 0, 0), Color(0, 255, 0))
         for i in range(0, 100):
             randomFlashBig(strip, 0)
         for i in range(0, 100):
             randomFlash(strip, 0)
-        t = threading.Thread(target=colorBeam, args=(strip, Color(255, 0, 0)))
-        t.start()
-        time.sleep(0.1)
-        t = threading.Thread(target=colorBeam, args=(strip, Color(255, 255, 0)))
-        t.start()
+        colorWipe(strip, Color(255, 0, 0))  # Red wipe
+        colorWipe(strip, Color(0, 255, 0))  # Blue wipe
+        colorWipe(strip, Color(0, 0, 255))  # Green wipe
+        theaterChase(strip, Color(127, 127, 127))  # White theater chase
+        theaterChase(strip, Color(127,   0,   0))  # Red theater chase
+        theaterChase(strip, Color(  0,   0, 127))  # Blue theater chase
+        rainbow(strip)
+        rainbowCycle(strip)
+        theaterChaseRainbow(strip)
