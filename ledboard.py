@@ -1,4 +1,4 @@
-from pynput import keyboard
+import curses
 from neopixel import ws, Adafruit_NeoPixel, Color
 
 
@@ -36,15 +36,32 @@ strip = Strip(
 strip.begin()
 
 
-def on_press(key):
-    strip.single_color(RGB(255, 0, 0))
+# def on_press(key):
+#     strip.single_color(RGB(255, 0, 0))
 
 
-def on_release(key):
-    strip.single_color(RGB())
+# def on_release(key):
+#     strip.single_color(RGB())
 
 
-with keyboard.Listener(
-        on_press=on_press,
-        on_release=on_release) as listener:
-    listener.join()
+# with keyboard.Listener(
+#         on_press=on_press,
+#         on_release=on_release) as listener:
+#     listener.join()
+
+
+def main(stdscr):
+    # do not wait for input when calling getch
+    stdscr.nodelay(1)
+    while True:
+        # get keyboard input, returns -1 if none available
+        c = stdscr.getch()
+        if c != -1:
+            # print numeric value
+            stdscr.addstr(str(c) + ' ')
+            stdscr.refresh()
+            # return curser to start position
+            stdscr.move(0, 0)
+            strip.single_color(RGB(255, 0, 0))
+
+curses.wrapper(main)
