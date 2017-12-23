@@ -2,9 +2,9 @@ import curses
 from neopixel import ws, Adafruit_NeoPixel, Color
 
 
-class RGB(Color):
-    def __init__(self, r=0, g=0, b=0):
-        Color.__init__(self, r, b, g)
+# class RGB(Color):
+#     def __init__(self, r=0, g=0, b=0):
+#         Color.__init__(self, r, b, g)
 
 
 class Strip(Adafruit_NeoPixel):
@@ -62,6 +62,6 @@ def main(stdscr):
             stdscr.refresh()
             # return curser to start position
             stdscr.move(0, 0)
-            strip.single_color(RGB(255, 0, 0))
+            strip.single_color(Color(255, 0, 0))
 
 curses.wrapper(main)
