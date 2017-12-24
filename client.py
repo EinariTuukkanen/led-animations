@@ -1,5 +1,6 @@
 import socket
 import json
+from collections import namedtuple
 
 from pynput import keyboard
 
@@ -12,9 +13,7 @@ LED_COUNT = 100  # Number of LED pixels.
 clientsocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 clientsocket.connect((ADDRESS, PORT))
 
-
-def RGB(r=0, g=0, b=0):
-    return [r, g, b]
+RGB = namedtuple('RGB', ['r', 'g', 'b'])
 
 
 class Strip:
@@ -22,17 +21,18 @@ class Strip:
         self.pixel_count = pixel_count
         self.socket = socket
 
-        self.pixels = [RGB() for i in range(self.pixel_count)]
+        self.pixels = [RGB(0, 0, 0) for i in range(self.pixel_count)]
 
     def single_color(self, color):
         for i in range(self.pixel_count):
-            self.set_pixel_color(i, RGB(i, 0, 0))
+            self.set_pixel_color(i, color)
         self.show()
 
     def set_pixel_color(self, index, color):
         self.pixels[index] = color
 
     def show(self):
+        print('Showing: ', self.pixels)
         self.socket.send(json.dumps(self.pixels))
 
 
@@ -41,7 +41,7 @@ def on_press(key):
 
 
 def on_release(key):
-    strip.single_color(RGB())
+    strip.single_color(RGB(0, 0, 0))
 
 
 strip = Strip(LED_COUNT, clientsocket)
