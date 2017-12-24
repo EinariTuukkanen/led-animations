@@ -16,7 +16,7 @@ class Strip(Adafruit_NeoPixel):
         self.show()
 
 
-def buf_to_colors(self, buf):
+def buf_to_colors(buf):
     try:
         colors = json.loads(buf)
     except Exception as e:
