@@ -1,10 +1,9 @@
 import socket
 import json
-from collections import namedtuple
 
 from pynput import keyboard
 
-from helper import error_msg, read_command
+from helper import error_msg, read_command, RGB, InputMode
 
 
 class Strip:
@@ -27,13 +26,15 @@ class Strip:
 
 
 def on_press(key):
-    if hasattr(key, 'char'):
-        color = color_map.get(key.char, RGB(0, 0, 0))
-        strip.single_color(color)
+    if mode != InputMode.COMMAND:
+        if hasattr(key, 'char'):
+            color = color_map.get(key.char, RGB(0, 0, 0))
+            strip.single_color(color)
 
 
 def on_release(key):
-    strip.single_color(RGB(0, 0, 0))
+    if mode != InputMode.COMMAND:
+        strip.single_color(RGB(0, 0, 0))
 
 
 ADDRESS = '192.168.10.44'
@@ -45,58 +46,27 @@ clientsocket.connect((ADDRESS, PORT))
 
 strip = Strip(LED_COUNT, clientsocket)
 
-RGB = namedtuple('RGB', ['r', 'g', 'b'])
-
 color_map = {
     'q': RGB(255, 0, 0),
     'w': RGB(0, 255, 0),
     'e': RGB(0, 0, 255),
 }
 
-listener = keyboard.Listener(on_press=on_press, on_release=on_release)
-listener.start()
+mode = InputMode.COMMAND
 
+with keyboard.Listener(on_press=on_press, on_release=on_release) as listener:
+    while True:
+        cmd, arg = read_command()
 
-while True:
-    cmd, arg = read_command()
+        if cmd == 'record':
+            if not arg:
+                error_msg('Not enough arguments')
+                continue
+            mode = InputMode.RECORD
 
-    if cmd == 'record':
-        if not arg:
-            error_msg('Not enough arguments')
+        elif cmd == 'quit':
+            break
+
+        else:
+            error_msg('Unknown command')
             continue
-        pass
-    elif cmd == 'quit':
-        break
-    else:
-        error_msg('Unknown command')
-
-    # if not recording:
-    #     raw = input('> ').split(' ')
-    #     cmd = raw[0]
-
-    #     # Handle escape char (\x1b = ESC)
-    #     if '\x1b' in cmd:
-    #         cmd = raw[0].split('\x1b')[-1]
-
-    #     if cmd == 'record':
-    #         if len(raw) == 2 and raw[1]:
-    #             slot = raw[1]
-    #             new_record = []
-    #             print(
-    #                 'Now recording to slot {}, '
-    #                 'press esc to stop recording.'.format(slot))
-    #             recording = True
-
-    #     elif cmd == 'play':
-    #         if len(raw) == 2 and raw[1]:
-    #             slot = raw[1]
-    #             print('Now playing from slot {}.'.format(slot))
-    #             play_record(records[slot])
-
-    #     elif cmd == 'quit':
-    #         break
-
-    #     else:
-    #         print('Unknown command.')
-
-listener.stop()

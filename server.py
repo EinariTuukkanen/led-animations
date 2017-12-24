@@ -67,3 +67,5 @@ while True:
         colors = buf_to_colors(buf)
         if len(colors) == strip.numPixels():
             strip.set_pixels(colors)
+    else:
+        connection, address = serversocket.accept()

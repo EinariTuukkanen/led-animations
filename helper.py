@@ -1,4 +1,16 @@
+from collections import namedtuple
+from enum import Enum
+
 DEBUG = False
+
+RGB = namedtuple('RGB', ['r', 'g', 'b'])
+
+
+class InputMode(Enum):
+    """ Different input modes """
+    COMMAND = 1
+    RECORD = 2
+    FREE = 3
 
 
 def debug_msg(msg):
@@ -12,8 +24,8 @@ def error_msg(msg):
     print('[ERROR] {}'.format(msg))
 
 
-def read_command(self):
-    raw = input('> ').split(' ')
+def read_command():
+    raw = raw_input('> ').split(' ')
     cmd = raw[0]
 
     # Handle escape char (\x1b = ESC)
