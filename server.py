@@ -21,7 +21,7 @@ def buf_to_colors(buf):
         colors = json.loads(buf)
     except Exception as e:
         print('Error while loading json', e)
-
+    print(colors)
     for i in range(len(colors)):
         colors[i] = Color(colors[i][0], colors[i][2], colors[i][1])
     print(colors)
@@ -64,4 +64,5 @@ while True:
     connection, address = serversocket.accept()
     buf = connection.recv(4096)
     if len(buf) > 0:
+        print(buf)
         strip.set_pixels(buf_to_colors(buf))
