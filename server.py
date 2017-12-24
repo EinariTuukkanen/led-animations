@@ -47,6 +47,7 @@ LED_CHANNEL = 0  # set to '1' for GPIOs 13, 19, 41, 45 or 53
 LED_STRIP = ws.WS2811_STRIP_GRB  # Strip type and colour ordering
 
 serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+serversocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 serversocket.bind((ADDRESS, PORT))
 serversocket.listen(MAX_CONNECTIONS)
 connection, address = serversocket.accept()
