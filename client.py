@@ -15,6 +15,12 @@ clientsocket.connect((ADDRESS, PORT))
 
 RGB = namedtuple('RGB', ['r', 'g', 'b'])
 
+color_map = {
+    'q': RGB(255, 0, 0),
+    'w': RGB(0, 255, 0),
+    'e': RGB(0, 0, 255),
+}
+
 
 class Strip:
     def __init__(self, pixel_count, socket):
@@ -36,7 +42,9 @@ class Strip:
 
 
 def on_press(key):
-    strip.single_color(RGB(255, 0, 0))
+    if hasattr(key, 'char'):
+        color = color_map.get(key.char, RGB(0, 0, 0))
+        strip.single_color(color)
 
 
 def on_release(key):

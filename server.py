@@ -5,6 +5,7 @@ from neopixel import ws, Adafruit_NeoPixel, Color
 
 
 class Strip(Adafruit_NeoPixel):
+    """ Extends Adafruits NeoPixel by adding set all pixels at once -method """
     def set_pixels(self, colors):
         for i in range(self.numPixels()):
             self.setPixelColor(i, colors[i])
@@ -12,20 +13,28 @@ class Strip(Adafruit_NeoPixel):
 
 
 def buf_to_colors(buf):
+    """ Extracts Color instances from json dump """
     try:
         colors = json.loads(buf)
     except Exception as e:
-        print('Error while loading json', e)
+        debug('Error while loading json {}'.format(e))
         return []
+
     for i in range(len(colors)):
         colors[i] = Color(colors[i][0], colors[i][2], colors[i][1])
     return colors
 
 
+def debug(msg):
+    """ Debug message """
+    if DEBUG:
+        print('[DEBUG] {}'.format(msg))
+
 # Server configuration
 ADDRESS = '192.168.10.44'  # Address of the computer server is running on
 PORT = 8089
 MAX_CONNECTIONS = 5  # Number of allowed connections
+DEBUG = False
 
 # LED strip configuration
 LED_COUNT = 100  # Number of LED pixels.
@@ -40,6 +49,7 @@ LED_STRIP = ws.WS2811_STRIP_GRB  # Strip type and colour ordering
 serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 serversocket.bind((ADDRESS, PORT))
 serversocket.listen(MAX_CONNECTIONS)
+connection, address = serversocket.accept()
 
 strip = Strip(
     LED_COUNT,
@@ -52,8 +62,6 @@ strip = Strip(
     LED_STRIP
 )
 strip.begin()
-
-connection, address = serversocket.accept()
 
 while True:
     buf = connection.recv(4096)
