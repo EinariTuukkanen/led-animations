@@ -1,5 +1,52 @@
 import socket
+import json
+
+from pynput import keyboard
+
+
+ADDRESS = '192.168.10.44'  # Address of the computer server is running on
+PORT = 8089
+
+LED_COUNT = 100  # Number of LED pixels.
 
 clientsocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-clientsocket.connect(('192.168.10.44', 8089))
-clientsocket.send('hello')
+clientsocket.connect((ADDRESS, PORT))
+
+
+def RGB(r=0, g=0, b=0):
+    return [r, g, b]
+
+
+class Strip:
+    def __init__(self, pixel_count, socket):
+        self.pixel_count = pixel_count
+        self.socket = socket
+
+        self.pixels = [RGB() for i in range(self.pixel_count)]
+
+    def single_color(self, color):
+        for i in range(self.pixel_count):
+            self.set_pixel_color(i, RGB(i, 0, 0))
+        self.show()
+
+    def set_pixel_color(self, index, color):
+        self.pixels[index] = color
+
+    def show(self):
+        self.socket.send(json.dumps(self.pixels))
+
+
+def on_press(key):
+    strip.single_color(RGB(255, 0, 0))
+
+
+def on_release(key):
+    strip.single_color(RGB())
+
+
+strip = Strip(LED_COUNT, clientsocket)
+
+with keyboard.Listener(
+        on_press=on_press,
+        on_release=on_release) as listener:
+    listener.join()
