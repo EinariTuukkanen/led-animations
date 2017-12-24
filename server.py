@@ -3,6 +3,8 @@ import json
 
 from neopixel import ws, Adafruit_NeoPixel, Color
 
+from helper import debug_msg
+
 
 class Strip(Adafruit_NeoPixel):
     """ Extends Adafruits NeoPixel by adding set all pixels at once -method """
@@ -17,18 +19,13 @@ def buf_to_colors(buf):
     try:
         colors = json.loads(buf)
     except Exception as e:
-        debug('Error while loading json {}'.format(e))
+        debug_msg('Error while loading json {}'.format(e))
         return []
 
     for i in range(len(colors)):
         colors[i] = Color(colors[i][0], colors[i][2], colors[i][1])
     return colors
 
-
-def debug(msg):
-    """ Debug message """
-    if DEBUG:
-        print('[DEBUG] {}'.format(msg))
 
 # Server configuration
 ADDRESS = '192.168.10.44'  # Address of the computer server is running on
