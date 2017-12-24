@@ -57,9 +57,9 @@ strip = Strip(
 )
 strip.begin()
 
+connection, address = serversocket.accept()
 
 while True:
-    connection, address = serversocket.accept()
     buf = connection.recv(4096)
     if len(buf) > 0:
         print(buf)

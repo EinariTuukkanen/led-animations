@@ -32,7 +32,6 @@ class Strip:
         self.pixels[index] = color
 
     def show(self):
-        print('Showing: ', self.pixels)
         self.socket.send(json.dumps(self.pixels))
 
 
