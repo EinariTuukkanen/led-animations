@@ -10,11 +10,6 @@ class Strip(Adafruit_NeoPixel):
             self.setPixelColor(i, colors[i])
         self.show()
 
-    def single_color(self, color):
-        for i in range(self.numPixels()):
-            self.setPixelColor(i, color)
-        self.show()
-
 
 def buf_to_colors(buf):
     try:
@@ -64,4 +59,5 @@ while True:
     buf = connection.recv(4096)
     if len(buf) > 0:
         colors = buf_to_colors(buf)
-        strip.set_pixels(colors)
+        if len(colors) == strip.numPixels():
+            strip.set_pixels(colors)
