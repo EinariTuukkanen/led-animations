@@ -10,7 +10,7 @@ from helper import debug_msg
 class Strip(Adafruit_NeoPixel):
     """ Extends Adafruits NeoPixel by adding set all pixels at once -method """
     def set_pixels(self, colors):
-        for i in range(100):
+        for i in range(len(colors)):
             self.setPixelColor(i, colors[i])
         self.show()
 
