@@ -9,7 +9,6 @@ from helper import debug_msg
 class Strip(Adafruit_NeoPixel):
     """ Extends Adafruits NeoPixel by adding set all pixels at once -method """
     def set_pixels(self, colors):
-        print(colors)
         for i in range(self.numPixels()):
             self.setPixelColor(i, colors[i])
         self.show()
@@ -30,7 +29,8 @@ def buf_to_colors(buf):
             int(255*colors[2][i]),
             int(255*colors[1][i]))
         )
-    return colors
+    print(ret)
+    return ret
 
 
 # Server configuration
@@ -71,7 +71,6 @@ while True:
     buf = connection.recv(4096)
     if len(buf) > 0:
         colors = buf_to_colors(buf)
-        print(colors)
         if len(colors) == strip.numPixels():
             strip.set_pixels(colors)
     else:
