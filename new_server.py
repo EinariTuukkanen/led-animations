@@ -1,5 +1,6 @@
 import socket
 import json
+import threading
 
 from neopixel import ws, Adafruit_NeoPixel, Color
 
@@ -9,8 +10,8 @@ from helper import debug_msg
 class Strip(Adafruit_NeoPixel):
     """ Extends Adafruits NeoPixel by adding set all pixels at once -method """
     def set_pixels(self, colors):
-        for i, c in enumerate(colors):
-            self.setPixelColor(i, c)
+        for i in range(100):
+            self.setPixelColor(i, colors[i])
         self.show()
 
 
@@ -66,11 +67,19 @@ strip = Strip(
 )
 strip.begin()
 
+
+def receive(connection):
+    while True:
+        buf = connection.recv(4096)
+        if len(buf) > 0:
+            colors = buf_to_colors(buf)
+            strip.set_pixels(colors)
+        else:
+            # Reconnect after a disconnect
+            connection, address = serversocket.accept()
+
+t = threading.Thread(target=receive, args=(connection,))
+t.start()
+
 while True:
-    buf = connection.recv(4096)
-    if len(buf) > 0:
-        colors = buf_to_colors(buf)
-        strip.set_pixels(colors)
-    else:
-        # Reconnect after a disconnect
-        connection, address = serversocket.accept()
+    pass
