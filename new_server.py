@@ -80,7 +80,7 @@ def update_color(buf):
 
 while True:
     print(len(db))
-    if len(db) > 100:
+    if len(db) > 1000:
         break
     buf = connection.recv(4096)
     if len(buf) > 0:
@@ -91,6 +91,7 @@ while True:
         # Reconnect after a disconnect
         connection, address = serversocket.accept()
 
-for c in db:
-    strip.set_pixels(c)
+for i in len(db):
+    print('playing: ', i)
+    strip.set_pixels(db[i])
     time.sleep(0.1)
