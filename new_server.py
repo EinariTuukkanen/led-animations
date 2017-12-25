@@ -29,7 +29,6 @@ def buf_to_colors(buf):
             int(255*colors[2][i]),
             int(255*colors[1][i]))
         )
-    print(ret)
     return ret
 
 
