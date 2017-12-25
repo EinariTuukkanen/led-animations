@@ -9,8 +9,8 @@ from helper import debug_msg
 class Strip(Adafruit_NeoPixel):
     """ Extends Adafruits NeoPixel by adding set all pixels at once -method """
     def set_pixels(self, colors):
-        for i in range(self.numPixels()):
-            self.setPixelColor(i, colors[i])
+        for i, c in enumerate(colors):
+            self.setPixelColor(i, c)
         self.show()
 
 
@@ -70,8 +70,7 @@ while True:
     buf = connection.recv(4096)
     if len(buf) > 0:
         colors = buf_to_colors(buf)
-        if colors:
-            strip.set_pixels(colors)
+        strip.set_pixels(colors)
     else:
         # Reconnect after a disconnect
         connection, address = serversocket.accept()
