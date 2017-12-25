@@ -75,8 +75,9 @@ def update_color(buf):
 while True:
     buf = connection.recv(4096)
     if len(buf) > 0:
-        t = Thread(target=update_color, args=(buf,))
-        t.start()
+        update_color(buf)
+        # t = Thread(target=update_color, args=(buf,))
+        # t.start()
     else:
         # Reconnect after a disconnect
         connection, address = serversocket.accept()
