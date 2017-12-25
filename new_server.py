@@ -22,7 +22,7 @@ def buf_to_colors(buf):
         debug_msg('Error while loading json {}'.format(e))
         return []
 
-    ret = 0
+    ret = []
     for i in range(len(colors[0])):
         ret.append(Color(colors[0][i], colors[2][i], colors[1][i]))
     return colors
