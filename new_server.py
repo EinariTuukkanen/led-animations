@@ -69,6 +69,7 @@ strip.begin()
 while True:
     buf = connection.recv(4096)
     if len(buf) > 0:
+        print('received buf')
         colors = buf_to_colors(buf)
         if len(colors) == strip.numPixels():
             strip.set_pixels(colors)
