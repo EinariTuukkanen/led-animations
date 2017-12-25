@@ -24,7 +24,7 @@ def buf_to_colors(buf):
 
     ret = []
     for i in range(len(colors[0])):
-        ret.append(Color(colors[0][i], colors[2][i], colors[1][i]))
+        ret.append(Color(int(255*colors[0][i]), int(255*colors[2][i]), int(255*colors[1][i])))
     return colors
 
 
