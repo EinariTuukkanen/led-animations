@@ -91,7 +91,7 @@ while True:
         # Reconnect after a disconnect
         connection, address = serversocket.accept()
 
-for i in len(db):
+for i in range(len(db)):
     print('playing: ', i)
     strip.set_pixels(db[i])
     time.sleep(0.1)
