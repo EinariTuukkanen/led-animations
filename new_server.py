@@ -1,5 +1,6 @@
 import socket
 import json
+import time
 from threading import Thread
 
 from neopixel import ws, Adafruit_NeoPixel, Color
@@ -67,12 +68,19 @@ strip = Strip(
 )
 strip.begin()
 
+db = []
+
 
 def update_color(buf):
+    global db
     colors = buf_to_colors(buf)
-    strip.set_pixels(colors)
+    # strip.set_pixels(colors)
+    db.append(colors)
+
 
 while True:
+    if len(db) > 100:
+        break
     buf = connection.recv(4096)
     if len(buf) > 0:
         update_color(buf)
@@ -81,3 +89,7 @@ while True:
     else:
         # Reconnect after a disconnect
         connection, address = serversocket.accept()
+
+for c in db:
+    strip.set_pixels(c)
+    time.sleep(0.1)
