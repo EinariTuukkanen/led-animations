@@ -1,17 +1,38 @@
 import socket
 import json
 
+import numpy as np
 from neopixel import ws, Adafruit_NeoPixel, Color
 
-from helper import debug_msg
+from helper import recv_msg
+import config
+
+_gamma = np.load(config.GAMMA_TABLE_PATH)
 
 
 class Strip(Adafruit_NeoPixel):
     """ Extends Adafruits NeoPixel by adding set all pixels at once -method """
-    def set_pixels(self, colors):
-        for i in range(self.numPixels()):
-            self.setPixelColor(i, colors[i])
-        self.show()
+    _prev_pixels = []
+
+    def set_pixels(self, pixels):
+        p = _gamma[pixels] if config.SOFTWARE_GAMMA_CORRECTION else np.copy(pixels)
+        # Encode 24-bit LED values in 32 bit integers
+        r = np.left_shift(p[0][:].astype(int), 8)
+        g = np.left_shift(p[1][:].astype(int), 16)
+        b = p[2][:].astype(int)
+        rgb = np.bitwise_or(np.bitwise_or(r, g), b)
+        # Update the pixels
+        for i in range(config.N_PIXELS):
+            # Ignore pixels if they haven't changed (saves bandwidth)
+            if np.array_equal(p[:, i], self._prev_pixels[:, i]):
+                continue
+            strip._led_data[i] = rgb[i]
+        self._prev_pixels = np.copy(p)
+
+        # for i in range(len(colors)):
+        #     self.setPixelColor(i, colors[i])
+        # self.show()
+        # self._prev_pixels = colors
 
 
 def buf_to_colors(buf):
@@ -19,54 +40,48 @@ def buf_to_colors(buf):
     try:
         colors = json.loads(buf)
     except Exception as e:
-        debug_msg('Error while loading json {}'.format(e))
+        print('Error while loading json {}'.format(e))
         return []
 
-    for i in range(len(colors)):
-        colors[i] = Color(colors[i][0], colors[i][2], colors[i][1])
-    return colors
+    ret = []
+    for i in range(len(colors[0])):
+        ret.append(Color(
+            int(colors[0][i]),
+            int(colors[2][i]),
+            int(colors[1][i]))
+        )
+    return ret
 
-
-# Server configuration
-ADDRESS = '192.168.10.44'  # Address of the computer server is running on
-PORT = 8089
-MAX_CONNECTIONS = 5  # Number of allowed connections
-DEBUG = False
-
-# LED strip configuration
-LED_COUNT = 100  # Number of LED pixels.
-LED_PIN = 18  # GPIO pin connected to the pixels (18 uses PWM!).
-LED_FREQ_HZ = 800000  # LED signal frequency in hertz (usually 800khz)
-LED_DMA = 5  # DMA channel to use for generating signal (try 5)
-LED_BRIGHTNESS = 255  # Set to 0 for darkest and 255 for brightest
-LED_INVERT = False  # True to invert the signal (NPN transistor level shift)
-LED_CHANNEL = 0  # set to '1' for GPIOs 13, 19, 41, 45 or 53
-LED_STRIP = ws.WS2811_STRIP_GRB  # Strip type and colour ordering
 
 serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 serversocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-serversocket.bind((ADDRESS, PORT))
-serversocket.listen(MAX_CONNECTIONS)
+serversocket.bind((config.ADDRESS, config.PORT))
+serversocket.listen(config.MAX_CONNECTIONS)
 connection, address = serversocket.accept()
 
 strip = Strip(
-    LED_COUNT,
-    LED_PIN,
-    LED_FREQ_HZ,
-    LED_DMA,
-    LED_INVERT,
-    LED_BRIGHTNESS,
-    LED_CHANNEL,
-    LED_STRIP
+    config.N_PIXELS,
+    config.LED_PIN,
+    config.LED_FREQ_HZ,
+    config.LED_DMA,
+    config.LED_INVERT,
+    config.BRIGHTNESS,
+    config.LED_CHANNEL,
+    ws.WS2811_STRIP_GRB
 )
 strip.begin()
 
+
 while True:
-    buf = connection.recv(4096)
+    buf = recv_msg(connection)
     if len(buf) > 0:
-        colors = buf_to_colors(buf)
-        if len(colors) == strip.numPixels():
-            strip.set_pixels(colors)
+        # pixels = buf_to_colors(buf)
+        try:
+            pixels = json.loads(buf)
+        except Exception as e:
+            print('Error while loading json {}'.format(e))
+            continue
+        strip.set_pixels(pixels)
     else:
         # Reconnect after a disconnect
         connection, address = serversocket.accept()
