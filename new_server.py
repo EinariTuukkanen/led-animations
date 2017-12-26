@@ -92,11 +92,12 @@ db = []
 def update_color(buf):
     global db
     colors = buf_to_colors(buf)
-    strip.set_pixels(colors)
-    # db.append(colors)
+    # strip.set_pixels(colors)
+    db.append(colors)
 
 
 while True:
+    print(len(db))
     if len(db) > 1000:
         break
     buf = connection.recv(4096)
@@ -108,7 +109,7 @@ while True:
         # Reconnect after a disconnect
         connection, address = serversocket.accept()
 
-# for i in range(len(db)):
-#     print('playing: ', i)
-#     strip.set_pixels(db[i])
-#     time.sleep(0.1)
+for i in range(len(db)):
+    print('playing: ', i)
+    strip.set_pixels(db[i])
+    time.sleep(0.01)
