@@ -97,7 +97,6 @@ def update_color(buf):
 
 
 while True:
-    print(len(db))
     if len(db) > 1000:
         break
     buf = connection.recv(4096)
