@@ -39,10 +39,13 @@ def buf_to_colors(buf):
     try:
         colors = json.loads(buf)
     except Exception as e:
+        print(buf)
+        time.sleep(1)
         debug_msg('Error while loading json {}'.format(e))
         return []
 
     ret = []
+    print(colors)
     for i in range(len(colors[0])):
         ret.append(Color(
             int(colors[0][i]),
@@ -100,7 +103,7 @@ while True:
     print(len(db))
     if len(db) > 1000:
         break
-    buf = connection.recv(4096)
+    buf = connection.recv(10000)
     if len(buf) > 0:
         update_color(buf)
         # t = Thread(target=update_color, args=(buf,))
@@ -112,4 +115,4 @@ while True:
 for i in range(len(db)):
     print('playing: ', i)
     strip.set_pixels(db[i])
-    time.sleep(0.01)
+    time.sleep(0.5)
