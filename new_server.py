@@ -136,4 +136,3 @@ while True:
 for i in range(len(db)):
     print('playing: ', i)
     strip.set_pixels(db[i])
-    time.sleep(0.5)
