@@ -45,7 +45,6 @@ def buf_to_colors(buf):
         return []
 
     ret = []
-    print(colors)
     for i in range(len(colors[0])):
         ret.append(Color(
             int(colors[0][i]),
@@ -100,7 +99,6 @@ def update_color(buf):
 
 
 while True:
-    print(len(db))
     if len(db) > 1000:
         break
     buf = connection.recv(7296)
