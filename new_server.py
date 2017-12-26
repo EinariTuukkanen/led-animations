@@ -10,10 +10,28 @@ from helper import debug_msg
 
 class Strip(Adafruit_NeoPixel):
     """ Extends Adafruits NeoPixel by adding set all pixels at once -method """
+    _prev_pixels = []
+
     def set_pixels(self, colors):
+        # p = np.copy(pixels)
+        # # Encode 24-bit LED values in 32 bit integers
+        # r = np.left_shift(p[0][:].astype(int), 8)
+        # g = np.left_shift(p[1][:].astype(int), 16)
+        # b = p[2][:].astype(int)
+        # rgb = np.bitwise_or(np.bitwise_or(r, g), b)
+        # # Update the pixels
+        # for i in range(config.N_PIXELS):
+        #     # Ignore pixels if they haven't changed (saves bandwidth)
+        #     if np.array_equal(p[:, i], _prev_pixels[:, i]):
+        #         continue
+        #     strip._led_data[i] = rgb[i]
+        # _prev_pixels = np.copy(p)
+        # strip.show()
+
         for i in range(len(colors)):
             self.setPixelColor(i, colors[i])
         self.show()
+        # self._prev_pixels = colors
 
 
 def buf_to_colors(buf):
@@ -27,9 +45,9 @@ def buf_to_colors(buf):
     ret = []
     for i in range(len(colors[0])):
         ret.append(Color(
-            int(255*colors[0][i]),
-            int(255*colors[2][i]),
-            int(255*colors[1][i]))
+            int(colors[0][i]),
+            int(colors[2][i]),
+            int(colors[1][i]))
         )
     return ret
 
@@ -74,8 +92,8 @@ db = []
 def update_color(buf):
     global db
     colors = buf_to_colors(buf)
-    # strip.set_pixels(colors)
-    db.append(colors)
+    strip.set_pixels(colors)
+    # db.append(colors)
 
 
 while True:
@@ -91,7 +109,7 @@ while True:
         # Reconnect after a disconnect
         connection, address = serversocket.accept()
 
-for i in range(len(db)):
-    print('playing: ', i)
-    strip.set_pixels(db[i])
-    time.sleep(0.1)
+# for i in range(len(db)):
+#     print('playing: ', i)
+#     strip.set_pixels(db[i])
+#     time.sleep(0.1)
