@@ -103,7 +103,7 @@ while True:
     print(len(db))
     if len(db) > 1000:
         break
-    buf = connection.recv(10000)
+    buf = connection.recv(20000)
     if len(buf) > 0:
         update_color(buf)
         # t = Thread(target=update_color, args=(buf,))
