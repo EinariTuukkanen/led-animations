@@ -1,5 +1,6 @@
 import socket
 import json
+import struct
 import time
 from threading import Thread
 
@@ -98,10 +99,32 @@ def update_color(buf):
     db.append(colors)
 
 
+def recv_msg(sock):
+    # Read message length and unpack it into an integer
+    raw_msglen = recvall(sock, 4)
+    if not raw_msglen:
+        return None
+    msglen = struct.unpack('>I', raw_msglen)[0]
+    # Read the message data
+    return recvall(sock, msglen)
+
+
+def recvall(sock, n):
+    # Helper function to recv n bytes or return None if EOF is hit
+    data = b''
+    while len(data) < n:
+        packet = sock.recv(n - len(data))
+        if not packet:
+            return None
+        data += packet
+    return data
+
+
 while True:
     if len(db) > 1000:
         break
-    buf = connection.recv(7296)
+    # buf = connection.recv(7296)
+    buf = recv_msg(connection)
     if len(buf) > 0:
         update_color(buf)
         # t = Thread(target=update_color, args=(buf,))
