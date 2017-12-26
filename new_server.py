@@ -93,10 +93,10 @@ db = []
 
 
 def update_color(buf):
-    global db
+    # global db
     colors = buf_to_colors(buf)
-    # strip.set_pixels(colors)
-    db.append(colors)
+    strip.set_pixels(colors)
+    # db.append(colors)
 
 
 def recv_msg(sock):
