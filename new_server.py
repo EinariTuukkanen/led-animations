@@ -40,8 +40,8 @@ def buf_to_colors(buf):
         colors = json.loads(buf)
     except Exception as e:
         print('Error while loading json {}'.format(e))
-        print(buf)
-        time.sleep(10)
+        # print(buf)
+        # time.sleep(10)
         return []
 
     ret = []
