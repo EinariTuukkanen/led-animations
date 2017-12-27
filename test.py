@@ -14,3 +14,4 @@ strip = Adafruit_NeoPixel(
 )
 strip.begin()
 strip.setPixelColor(30, Color(255, 0, 0))
+strip.show()
