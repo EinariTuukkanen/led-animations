@@ -223,7 +223,6 @@ def microphone_update(audio_samples):
         # Map filterbank output onto LED strip
         output = visualization_effect(mel)
         remote_led.pixels = output
-        print(output)
         remote_led.update()
         if config.USE_GUI:
             # Plot filterbank output

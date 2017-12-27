@@ -78,7 +78,7 @@ strip.begin()
 
 while True:
     buf = recv_msg(connection)
-    if len(buf) > 0:
+    if buf is not None:
         pixels = buf_to_colors(buf)
         # try:
         #     pixels = json.loads(buf)
