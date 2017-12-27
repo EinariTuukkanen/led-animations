@@ -60,7 +60,7 @@ USE_GUI = True
 DISPLAY_FPS = True
 """Whether to display the FPS when running (can reduce performance)"""
 
-N_PIXELS = 70
+N_PIXELS = 100
 """Number of pixels in the LED strip (must match ESP8266 firmware)"""
 
 PIXEL_OFFSET = 30
