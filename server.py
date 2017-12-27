@@ -51,7 +51,7 @@ class Strip(Adafruit_NeoPixel):
                     self._prev_pixels[i] == pixels[i]):
                 continue
             self.setPixelColor(
-                min(i + config.PIXEL_OFFSET, config.N_PIXELS),
+                min(i + config.PIXEL_OFFSET, 100),
                 pixels[i]
             )
         self.show()
