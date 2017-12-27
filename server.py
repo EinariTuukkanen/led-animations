@@ -15,7 +15,8 @@ class Strip(Adafruit_NeoPixel):
     _prev_pixels = []
 
     def set_pixels(self, pixels):
-        # p = _gamma[pixels] if config.SOFTWARE_GAMMA_CORRECTION else np.copy(pixels)
+        # p = _gamma[pixels] if config.SOFTWARE_GAMMA_CORRECTION
+        # else np.copy(pixels)
         # # Encode 24-bit LED values in 32 bit integers
         # r = np.left_shift(p[0][:].astype(int), 8)
         # g = np.left_shift(p[1][:].astype(int), 16)
@@ -30,7 +31,8 @@ class Strip(Adafruit_NeoPixel):
         # self._prev_pixels = np.copy(p)
 
         for i in range(len(pixels)):
-            if self._prev_pixels[i] == pixels[i]:
+            if (len(self._prev_pixels) == len(pixels) and
+                    self._prev_pixels[i] == pixels[i]):
                 continue
             self.setPixelColor(i, pixels[i])
         self.show()
