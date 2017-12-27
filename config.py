@@ -29,7 +29,7 @@ if DEVICE == 'pi':
     """Use bluetooth led strip?"""
     BLUETOOTH_ADDRESS = '78:9C:E7:0B:2F:50'
     """IP address of single color bluetooth led strip controller"""
-    ADDRESS = '192.168.1.53'
+    ADDRESS = '192.168.1.220'
     """IP address of the raspberry pi (socket server)"""
     PORT = 8089
     """Port number used for socket communication"""
