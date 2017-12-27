@@ -41,7 +41,7 @@ if DEVICE == 'pi':
     """Brightness of LED strip between 0 and 255"""
     LED_INVERT = False
     """Set True if using an inverting logic level converter"""
-    SOFTWARE_GAMMA_CORRECTION = True
+    SOFTWARE_GAMMA_CORRECTION = False
     """Set to True because Raspberry Pi doesn't use hardware dithering"""
     LED_CHANNEL = 0
     """set to '1' for GPIOs 13, 19, 41, 45 or 53"""

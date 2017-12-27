@@ -4,8 +4,8 @@ import json
 import numpy as np
 from neopixel import ws, Adafruit_NeoPixel, Color
 
-from helper import recv_msg
 import config
+from helper import recv_msg
 
 _gamma = np.load(config.GAMMA_TABLE_PATH)
 
