@@ -51,7 +51,7 @@ class Strip(Adafruit_NeoPixel):
                     self._prev_pixels[i] == pixels[i]):
                 continue
             self.setPixelColor(
-                min(i + config.PIXEL_OFFSET, 100),
+                min(i + config.PIXEL_OFFSET, config.MAX_PIXEL_INDEX),
                 pixels[i]
             )
         self.show()
@@ -85,7 +85,7 @@ connection, address = serversocket.accept()
 
 # Connnect ws2811 LEDs
 strip = Strip(
-    100,
+    config.MAX_PIXEL_INDEX,
     config.LED_PIN,
     config.LED_FREQ_HZ,
     config.LED_DMA,

@@ -66,6 +66,9 @@ N_PIXELS = 70
 PIXEL_OFFSET = 30
 """Number of dead pixels in the beginning"""
 
+MAX_PIXEL_INDEX = 100
+"""To be used with offset to determine real pixel count"""
+
 GAMMA_TABLE_PATH = os.path.join(os.path.dirname(__file__), 'gamma_table.npy')
 """Location of the gamma correction table"""
 
