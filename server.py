@@ -15,24 +15,26 @@ class Strip(Adafruit_NeoPixel):
     _prev_pixels = []
 
     def set_pixels(self, pixels):
-        p = _gamma[pixels] if config.SOFTWARE_GAMMA_CORRECTION else np.copy(pixels)
-        # Encode 24-bit LED values in 32 bit integers
-        r = np.left_shift(p[0][:].astype(int), 8)
-        g = np.left_shift(p[1][:].astype(int), 16)
-        b = p[2][:].astype(int)
-        rgb = np.bitwise_or(np.bitwise_or(r, g), b)
-        # Update the pixels
-        for i in range(config.N_PIXELS):
-            # Ignore pixels if they haven't changed (saves bandwidth)
-            if np.array_equal(p[:, i], self._prev_pixels[:, i]):
-                continue
-            strip._led_data[i] = rgb[i]
-        self._prev_pixels = np.copy(p)
+        # p = _gamma[pixels] if config.SOFTWARE_GAMMA_CORRECTION else np.copy(pixels)
+        # # Encode 24-bit LED values in 32 bit integers
+        # r = np.left_shift(p[0][:].astype(int), 8)
+        # g = np.left_shift(p[1][:].astype(int), 16)
+        # b = p[2][:].astype(int)
+        # rgb = np.bitwise_or(np.bitwise_or(r, g), b)
+        # # Update the pixels
+        # for i in range(config.N_PIXELS):
+        #     # Ignore pixels if they haven't changed (saves bandwidth)
+        #     if np.array_equal(p[:, i], self._prev_pixels[:, i]):
+        #         continue
+        #     strip._led_data[i] = rgb[i]
+        # self._prev_pixels = np.copy(p)
 
-        # for i in range(len(colors)):
-        #     self.setPixelColor(i, colors[i])
-        # self.show()
-        # self._prev_pixels = colors
+        for i in range(len(pixels)):
+            if self._prev_pixels[i] == pixels[i]:
+                continue
+            self.setPixelColor(i, pixels[i])
+        self.show()
+        self._prev_pixels = pixels
 
 
 def buf_to_colors(buf):
@@ -75,12 +77,12 @@ strip.begin()
 while True:
     buf = recv_msg(connection)
     if len(buf) > 0:
-        # pixels = buf_to_colors(buf)
-        try:
-            pixels = json.loads(buf)
-        except Exception as e:
-            print('Error while loading json {}'.format(e))
-            continue
+        pixels = buf_to_colors(buf)
+        # try:
+        #     pixels = json.loads(buf)
+        # except Exception as e:
+        #     print('Error while loading json {}'.format(e))
+        #     continue
         strip.set_pixels(pixels)
     else:
         # Reconnect after a disconnect
