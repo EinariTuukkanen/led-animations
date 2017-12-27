@@ -85,7 +85,7 @@ connection, address = serversocket.accept()
 
 # Connnect ws2811 LEDs
 strip = Strip(
-    config.N_PIXELS,
+    100,
     config.LED_PIN,
     config.LED_FREQ_HZ,
     config.LED_DMA,
