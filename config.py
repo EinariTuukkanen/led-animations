@@ -60,8 +60,11 @@ USE_GUI = True
 DISPLAY_FPS = True
 """Whether to display the FPS when running (can reduce performance)"""
 
-N_PIXELS = 100
+N_PIXELS = 70
 """Number of pixels in the LED strip (must match ESP8266 firmware)"""
+
+PIXEL_OFFSET = 30
+"""Number of dead pixels in the beginning"""
 
 GAMMA_TABLE_PATH = os.path.join(os.path.dirname(__file__), 'gamma_table.npy')
 """Location of the gamma correction table"""
