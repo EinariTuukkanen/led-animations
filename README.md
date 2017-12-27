@@ -35,7 +35,7 @@ sudo apt-get upgrade
 Install required packages
 ```
 sudo apt-get install scons python-pip git python-dev swig libglib2.0-dev
-sudo pip install numpy bluepy
+sudo pip install bluepy
 ```
 
 Install Neopixel

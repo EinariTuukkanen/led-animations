@@ -25,6 +25,8 @@ if DEVICE == 'esp8266':
     """Set to False because the firmware handles gamma correction + dither"""
 
 if DEVICE == 'pi':
+    USE_BLUETOOTH_LED = True
+    """Use bluetooth led strip?"""
     BLUETOOTH_ADDRESS = '78:9C:E7:0B:2F:50'
     """IP address of single color bluetooth led strip controller"""
     ADDRESS = '192.168.1.53'
