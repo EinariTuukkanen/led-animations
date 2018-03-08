@@ -25,6 +25,7 @@ if DEVICE == 'esp8266':
     """Set to False because the firmware handles gamma correction + dither"""
 
 if DEVICE == 'pi':
+    USE_RPI_LED = True
     USE_BLUETOOTH_LED = True
     """Use bluetooth led strip?"""
     BLUETOOTH_ADDRESS = '78:9C:E7:0B:2F:50'
@@ -100,7 +101,7 @@ MIN_FREQUENCY = 200
 MAX_FREQUENCY = 12000
 """Frequencies above this value will be removed during audio processing"""
 
-N_FFT_BINS = 24
+N_FFT_BINS = 12
 """Number of frequency bins to use when transforming audio to frequency domain
 
 Fast Fourier transforms are used to transform time-domain audio data to the
