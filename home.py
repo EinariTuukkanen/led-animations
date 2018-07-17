@@ -41,11 +41,13 @@ strip = Strip(
 )
 
 
-@app.route('/color', methods=['POST'])
+@app.route('/color', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         strip.set_pixels([RGB(255, 0, 0) for i in range(config.N_PIXELS)])
         return ''
+    else:
+        return 'Use POST to communicate'
 
 
 strip.begin()
