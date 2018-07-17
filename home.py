@@ -48,6 +48,7 @@ def login():
     if request.method == 'POST':
         raw_data = request.data
         if not raw_data:
+            print('No data')
             return 'No data'
         data = json.loads(str(raw_data.decode("utf-8")))
         strip.set_pixels([
@@ -57,6 +58,7 @@ def login():
                 data.get('b', 0)
             ) for i in range(config.N_PIXELS)
         ])
+        print('Changed color: {}'.format(json.dumps(data)))
         return 'Changed color: {}'.format(json.dumps(data))
     else:
         return 'Use POST to communicate'
