@@ -1,4 +1,5 @@
 from neopixel import ws, Adafruit_NeoPixel, Color
+from flask import Flask, request
 
 import config
 
@@ -25,6 +26,8 @@ def RGB(r=0, g=0, b=0):
     return Color(r, b, g)
 
 
+app = Flask(__name__)
+
 # Connnect ws2811 LEDs
 strip = Strip(
     config.MAX_PIXEL_INDEX,
@@ -36,6 +39,14 @@ strip = Strip(
     config.LED_CHANNEL,
     ws.WS2811_STRIP_GRB
 )
-strip.begin()
 
-strip.set_pixels([RGB(255, 0, 0) for i in range(config.N_PIXELS)])
+
+@app.route('/color', methods=['POST'])
+def login():
+    if request.method == 'POST':
+        strip.set_pixels([RGB(255, 0, 0) for i in range(config.N_PIXELS)])
+        return ''
+
+
+strip.begin()
+app.run(host='0.0.0.0')
