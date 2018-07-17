@@ -1,3 +1,5 @@
+import json
+
 from neopixel import ws, Adafruit_NeoPixel, Color
 from flask import Flask, request
 
@@ -44,8 +46,18 @@ strip = Strip(
 @app.route('/color', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        strip.set_pixels([RGB(255, 0, 0) for i in range(config.N_PIXELS)])
-        return ''
+        raw_data = request.data
+        if not raw_data:
+            return 'No data'
+        data = json.loads(str(raw_data.decode("utf-8")))
+        strip.set_pixels([
+            RGB(
+                data.get('r', 0),
+                data.get('g', 0),
+                data.get('b', 0)
+            ) for i in range(config.N_PIXELS)
+        ])
+        return 'Changed color: {}'.format(json.dumps(data))
     else:
         return 'Use POST to communicate'
 
