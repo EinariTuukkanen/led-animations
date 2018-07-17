@@ -42,6 +42,17 @@ strip = Strip(
     ws.WS2811_STRIP_GRB
 )
 
+colors = {
+    'red': RGB(255, 0, 0),
+    'green': RGB(0, 255, 0),
+    'blue': RGB(0, 0, 255),
+    'purple': RGB(255, 0, 255),
+    'yellow': RGB(255, 255, 0),
+    'turquoise': RGB(0, 255, 255),
+    'white': RGB(255, 255, 255),
+    'off': RGB(0, 0, 0)
+}
+
 
 @app.route('/color', methods=['GET', 'POST'])
 def login():
@@ -49,17 +60,19 @@ def login():
         raw_data = request.data
         if not raw_data:
             print('No data')
-            return 'No data'
+            return
         data = json.loads(str(raw_data.decode("utf-8")))
-        strip.set_pixels([
-            RGB(
-                data.get('r', 0),
-                data.get('g', 0),
-                data.get('b', 0)
-            ) for i in range(config.N_PIXELS)
-        ])
+        if 'color' in data and data['color'] in colors:
+            color = colors[data['color']]
+        elif 'r' in data and 'g' in data and 'b' in data:
+            color = RGB(**data)
+        else:
+            print('Unknown data')
+            return
+
+        strip.set_pixels([color for i in range(config.N_PIXELS)])
         print('Changed color: {}'.format(json.dumps(data)))
-        return 'Changed color: {}'.format(json.dumps(data))
+        return
     else:
         return 'Use POST to communicate'
 
