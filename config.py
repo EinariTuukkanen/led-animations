@@ -26,9 +26,10 @@ if DEVICE == 'esp8266':
 
 if DEVICE == 'pi':
     USE_RPI_LED = True
-    USE_BLUETOOTH_LED = True
+    USE_BLUETOOTH_LED = False
     """Use bluetooth led strip?"""
     BLUETOOTH_ADDRESS = '78:9C:E7:0B:2F:50'
+    # BLUETOOTH_ADDRESS = 'A4:C1:38:9A:84:9F'  # New
     """IP address of single color bluetooth led strip controller"""
     ADDRESS = '192.168.1.220'
     """IP address of the raspberry pi (socket server)"""
