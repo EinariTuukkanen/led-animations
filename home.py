@@ -60,7 +60,7 @@ def login():
         raw_data = request.data
         if not raw_data:
             print('No data')
-            return
+            return 'No data'
         data = json.loads(str(raw_data.decode("utf-8")))
         if 'color' in data and data['color'] in colors:
             color = colors[data['color']]
@@ -68,11 +68,11 @@ def login():
             color = RGB(**data)
         else:
             print('Unknown data')
-            return
+            return 'Unknown data'
 
         strip.set_pixels([color for i in range(config.N_PIXELS)])
         print('Changed color: {}'.format(json.dumps(data)))
-        return
+        return 'Changed color: {}'.format(json.dumps(data))
     else:
         return 'Use POST to communicate'
 
