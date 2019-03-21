@@ -93,7 +93,7 @@ def cava():
             print('Unknown data')
             return 'Unknown data'
 
-        strip.set_pixels(colors)
+        strip.set_pixels([RGB(*c) for c in colors])
         # print('Changed color: {}'.format(json.dumps(data)))
         return 'Changed color: {}'.format(json.dumps(data))
     else:
