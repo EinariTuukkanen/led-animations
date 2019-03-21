@@ -47,6 +47,7 @@ colors = {
     'green': RGB(0, 255, 0),
     'blue': RGB(0, 0, 255),
     'purple': RGB(255, 0, 255),
+    'orange': RGB(255, 127, 80),
     'yellow': RGB(255, 255, 0),
     'turquoise': RGB(0, 255, 255),
     'white': RGB(255, 255, 255),
@@ -62,16 +63,38 @@ def login():
             print('No data')
             return 'No data'
         data = json.loads(str(raw_data.decode("utf-8")))
-        if 'color' in data and data['color'] in colors:
-            color = colors[data['color']]
+        if 'color' in data and data['color'].lower().strip()
+            color = colors[data['color'].lower().strip()]
         elif 'r' in data and 'g' in data and 'b' in data:
             color = RGB(**data)
         else:
-            print('Unknown data')
+            print('Unknown data', data)
             return 'Unknown data'
 
         strip.set_pixels([color for i in range(config.N_PIXELS)])
         print('Changed color: {}'.format(json.dumps(data)))
+        return 'Changed color: {}'.format(json.dumps(data))
+    else:
+        return 'Use POST to communicate'
+
+
+@app.route('/cava', methods=['GET', 'POST'])
+def cava():
+    if request.method == 'POST':
+        raw_data = request.data
+        if not raw_data:
+            print('No data')
+            return 'No data'
+        data = json.loads(str(raw_data.decode("utf-8")))
+
+        if 'colors' in data:
+            colors = data['colors']
+        else:
+            print('Unknown data')
+            return 'Unknown data'
+
+        strip.set_pixels(colors)
+        # print('Changed color: {}'.format(json.dumps(data)))
         return 'Changed color: {}'.format(json.dumps(data))
     else:
         return 'Use POST to communicate'
