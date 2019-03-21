@@ -63,7 +63,7 @@ def login():
             print('No data')
             return 'No data'
         data = json.loads(str(raw_data.decode("utf-8")))
-        if 'color' in data and data['color'].lower().strip()
+        if 'color' in data and data['color'].lower().strip():
             color = colors[data['color'].lower().strip()]
         elif 'r' in data and 'g' in data and 'b' in data:
             color = RGB(**data)
