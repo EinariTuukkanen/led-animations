@@ -21,8 +21,8 @@ class LedStrip(Adafruit_NeoPixel):
         try:
             self.begin()
         except RuntimeError as e:
-            print('Error {e}\nDid you run with root privileges?'.format(e=e))
-            raise(e)
+            print('Error', e)
+            exit('Did you run with root privileges?')
 
     def set_pixel_colors(self, colors=[]):
         # Reset colors with empty method call
