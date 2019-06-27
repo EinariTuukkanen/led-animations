@@ -44,21 +44,18 @@ class LedStrip(Adafruit_NeoPixel):
 
 
 class LedSystem:
-    def __init__(self, areas={}):
-        self.areas = areas
-
-    def add_area(self, name, strip):
-        self.areas[name] = strip
+    def __init__(self, area_strips={}):
+        self.area_strips = area_strips
 
     def set_area_colors(self, colors=[], areas=[]):
         # Without specified area, run for all areas
         if not areas:
-            areas = self.areas.keys()
+            areas = self.area_strips.keys()
 
         for name in areas:
-            if name not in self.areas:
+            if name not in self.area_strips:
                 raise Exception('Invalid area {name}'.format(name=name))
-            self.areas[name].set_pixel_colors(colors)
+            self.area_strips[name].set_pixel_colors(colors)
 
     def set_area_colors_rgb(self, colors_rgb=[], areas=[]):
         self.set_area_colors(
@@ -87,8 +84,8 @@ common_configs = [
 
 # Connnect ws2811 LEDs into one system
 system = LedSystem({
-    area: LedStrip(params['start_index'], params['end_index'], *common_configs)
-    for area, params in cfg.AREAS
+    name: LedStrip(area.start_index, area.end_index, *common_configs)
+    for name, area in cfg.AREAS.items()
 })
 
 while True:
