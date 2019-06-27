@@ -23,10 +23,16 @@ LED_INVERT = False
 # Set to '1' for GPIOs 13, 19, 41, 45 or 53
 LED_CHANNEL = 0
 
+
+class Area:
+    def __init__(self, name, start_index, end_index):
+        self.name = name
+        self.start_index = start_index
+        self.end_index = end_index
+        self.led_count = end_index - start_index
+
+
 # Configure areas for the led system
 AREAS = {
-    'olohuone': {
-        'start_index': 0,
-        'end_index': 100,
-    },
+    'olohuone': Area('olohuone', 0, 100)
 }
