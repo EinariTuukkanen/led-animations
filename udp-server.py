@@ -94,5 +94,4 @@ if __name__ == '__main__':
     while True:
         data, addr = sock.recvfrom(2**14)  # buffer size is 1024 bytes
         data = json.loads(data.decode('utf-8'))
-        print('received message:', data)
         system.set_area_colors_rgb(data['colors'], data['areas'])
