@@ -17,7 +17,7 @@ room = cfg.AREAS['olohuone']
 
 data = {
     'areas': [room.name],
-    'colors': [[255, 255, 255] * room.led_count]
+    'colors': [[255, 255, 255]] * room.led_count
 }
 
 sock.sendto(encode_data(data), (cfg.UDP_IP, cfg.UDP_PORT))
