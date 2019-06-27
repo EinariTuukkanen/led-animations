@@ -18,7 +18,10 @@ class LedStrip(Adafruit_NeoPixel):
             brightness, channel, strip_type
         )
         self.state = []
-        self.begin()
+        try:
+            self.begin()
+        except RuntimeError as e:
+            print('Error {e}\nDid you run with root privileges?'.format(e=e))
 
     def set_pixel_colors(self, colors=[]):
         # Reset colors with empty method call
@@ -63,33 +66,34 @@ class LedSystem:
         )
 
 
-UDP_IP = cfg.UDP_IP
-UDP_PORT = cfg.UDP_PORT
+if __name__ == '__main__':
+    UDP_IP = cfg.UDP_IP
+    UDP_PORT = cfg.UDP_PORT
 
-sock = socket.socket(
-    socket.AF_INET,     # Internet
-    socket.SOCK_DGRAM   # UDP
-)
-sock.bind((UDP_IP, UDP_PORT))
+    sock = socket.socket(
+        socket.AF_INET,     # Internet
+        socket.SOCK_DGRAM   # UDP
+    )
+    sock.bind((UDP_IP, UDP_PORT))
 
-common_configs = [
-    cfg.LED_PIN,
-    cfg.LED_FREQ_HZ,
-    cfg.LED_DMA,
-    cfg.LED_INVERT,
-    cfg.BRIGHTNESS,
-    cfg.LED_CHANNEL,
-    ws.WS2811_STRIP_RGB
-]
+    common_configs = [
+        cfg.LED_PIN,
+        cfg.LED_FREQ_HZ,
+        cfg.LED_DMA,
+        cfg.LED_INVERT,
+        cfg.BRIGHTNESS,
+        cfg.LED_CHANNEL,
+        ws.WS2811_STRIP_RGB
+    ]
 
-# Connnect ws2811 LEDs into one system
-system = LedSystem({
-    name: LedStrip(area.start_index, area.end_index, *common_configs)
-    for name, area in cfg.AREAS.items()
-})
+    # Connnect ws2811 LEDs into one system
+    system = LedSystem({
+        name: LedStrip(area.start_index, area.end_index, *common_configs)
+        for name, area in cfg.AREAS.items()
+    })
 
-while True:
-    data, addr = sock.recvfrom(1024)  # buffer size is 1024 bytes
-    data = json.loads(data)
-    print('received message:', data)
-    system.set_area_colors(data['areas'], data['colors'])
+    while True:
+        data, addr = sock.recvfrom(1024)  # buffer size is 1024 bytes
+        data = json.loads(data)
+        print('received message:', data)
+        system.set_area_colors(data['areas'], data['colors'])
