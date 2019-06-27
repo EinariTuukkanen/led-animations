@@ -7,14 +7,12 @@ import config as cfg
 
 
 class LedStrip(Adafruit_NeoPixel):
-    def __init__(self, first_index, last_index, pin, freq_hz=800000, dma=10,
+    def __init__(self, area, pin, freq_hz=800000, dma=10,
                  invert=False, brightness=255, channel=0,
                  strip_type=ws.WS2811_STRIP_RGB):
-        self.first_index = first_index
-        self.last_index = last_index
-        self.num = last_index - first_index
+        self.area = area
         super().__init__(
-            self.num, pin, freq_hz, dma, invert,
+            self.area.num, pin, freq_hz, dma, invert,
             brightness, channel, strip_type
         )
         self.state = []
@@ -38,7 +36,7 @@ class LedStrip(Adafruit_NeoPixel):
 
         for i, color in enumerate(colors):
             # TODO: skip update if state not changed
-            self.setPixelColor(self.first_index + colors[i], color)
+            self.setPixelColor(self.area.first_index + colors[i], color)
 
         self.show()
         self.state = colors
@@ -89,8 +87,8 @@ if __name__ == '__main__':
 
     # Connnect ws2811 LEDs into one system
     system = LedSystem({
-        name: LedStrip(area.start_index, area.end_index, *common_configs)
-        for name, area in cfg.AREAS.items()
+        area.name: LedStrip(area, *common_configs)
+        for area in cfg.AREAS.values()
     })
 
     while True:
