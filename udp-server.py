@@ -12,7 +12,7 @@ class LedStrip(Adafruit_NeoPixel):
                  strip_type=ws.WS2811_STRIP_RGB):
         self.area = area
         super().__init__(
-            self.area.led_count, pin, freq_hz, dma, invert,
+            self.area.end_index, pin, freq_hz, dma, invert,
             brightness, channel, strip_type
         )
         self.state = []
