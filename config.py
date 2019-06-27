@@ -12,7 +12,7 @@ LED_PIN = 18
 LED_FREQ_HZ = 800000
 
 # DMA channel used for generating PWM signal (try 5)
-LED_DMA = 5
+LED_DMA = 10
 
 # Brightness of LED strip between 0 and 255
 BRIGHTNESS = 255
