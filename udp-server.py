@@ -12,7 +12,7 @@ class LedStrip(Adafruit_NeoPixel):
                  strip_type=ws.WS2811_STRIP_RGB):
         self.area = area
         super().__init__(
-            self.area.num, pin, freq_hz, dma, invert,
+            self.area.led_count, pin, freq_hz, dma, invert,
             brightness, channel, strip_type
         )
         self.state = []
@@ -25,12 +25,12 @@ class LedStrip(Adafruit_NeoPixel):
     def set_pixel_colors(self, colors=[]):
         # Reset colors with empty method call
         if not colors:
-            colors = [Color(0, 0, 0)] * self.num
+            colors = [Color(0, 0, 0)] * self.area.led_count
 
-        if len(colors) != self.num:
+        if len(colors) != self.area.led_count:
             raise Exception(
                 'Got {n} colors for {m} pixels'.format(
-                    n=len(colors), m=self.num
+                    n=len(colors), m=self.area.led_count
                 )
             )
 
