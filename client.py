@@ -16,7 +16,7 @@ sock = socket.socket(
 room = cfg.AREAS['olohuone']
 
 data = {
-    'areas': [room],
+    'areas': [room.name],
     'colors': [[255, 255, 255] * room.led_count]
 }
 
