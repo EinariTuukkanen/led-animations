@@ -26,7 +26,11 @@ class LedStrip(Adafruit_NeoPixel):
             colors = [Color(0, 0, 0)] * self.num
 
         if len(colors) != self.num:
-            raise Exception(f'Got {len(colors)} colors for {self.num} pixels')
+            raise Exception(
+                'Got {n} colors for {m} pixels'.format(
+                    n=len(colors), m=self.num
+                )
+            )
 
         for i, color in enumerate(colors):
             # TODO: skip update if state not changed
@@ -53,7 +57,7 @@ class LedSystem:
 
         for name in areas:
             if name not in self.areas:
-                raise Exception(f'Invalid area {name}')
+                raise Exception('Invalid area {name}'.format(name=name))
             self.areas[name].set_pixel_colors(colors)
 
     def set_area_colors_rgb(self, colors_rgb=[], areas=[]):
