@@ -38,7 +38,7 @@ class LedStrip(Adafruit_NeoPixel):
 
         for i, color in enumerate(colors):
             # TODO: skip update if state not changed
-            self.setPixelColor(self.first_index + colors[i])
+            self.setPixelColor(self.first_index + colors[i], color)
 
         self.show()
         self.state = colors
