@@ -23,4 +23,4 @@ def recvall(sock, n):
 
 
 def pack_msg(data):
-    return struct.pack('>I', len(data)) + data
+    return struct.pack('>I', len(data)) + str.encode(data)

@@ -1,0 +1,91 @@
+import sys
+import requests
+import json
+import struct
+from scipy.stats import norm
+import numpy as np
+import socket
+import config
+from helper import pack_msg
+import colorsys
+
+# def _get_spaced_colors(n):
+#     max_value = 16581375
+#     interval = int(max_value / n)
+#     colors = [hex(i)[2:].zfill(6) for i in range(0, max_value, interval)]
+
+#     return [(int(i[:2], 16), int(i[2:4], 16), int(i[4:], 16)) for i in colors]
+
+
+# colors = []
+# for i in range(1, 70):
+#     (r, g, b) = colorsys.hsv_to_rgb(i * 1/70, 1.0, 1.0)
+#     R, G, B = int(255 * r), int(255 * g), int(255 * b)
+#     colors.append((R, G, B))
+
+# print(colors)
+
+# def change_format(_c):
+#     red = []
+#     green = []
+#     blue = []
+#     for r,g,b in _c:
+#         red.append(r)
+#         green.append(g)
+#         blue.append(b)
+#     return [red, green, blue]
+
+
+# ALL_COLORS = _get_spaced_colors(50)
+
+# print(ALL_COLORS)
+
+clientsocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+clientsocket.connect(('192.168.1.220', 8089))
+
+# colors = ALL_COLORS
+
+data = json.dumps(colors)
+clientsocket.sendall(pack_msg(data))
+
+
+
+# def _handle_stdin():
+#     while True:
+#         try:
+#             nums = list(map(int, sys.stdin.readline()[:-2].split(';')))
+#             colors = np.array([
+#                 np.array(ALL_COLORS[i]) * (n / 255) for i, n in enumerate(nums)
+#             ])
+#             print(colors)
+#             dx = 3 / 34
+#             m = 2.5
+#             dist = np.array([m * norm.pdf(0 + dx * (i - 34)) for i in range(69)])
+#             balanced_colors = [colors * x for x in dist]
+            
+#             r = []
+#             g = []
+#             b = []
+#             for xcolors in balanced_colors:
+#                 r.append(max([c[0] for c in xcolors]))
+#                 g.append(max([c[1] for c in xcolors]))
+#                 b.append(max([c[2] for c in xcolors]))
+
+
+#             # relative_colors = nums / 255
+#             # c = [ALL_COLORS[num] for num in nums]
+#             # r = [a[0] for a in c]
+#             # g = [a[1] for a in c]
+#             # b = [a[2] for a in c]
+#             # g = [0] * 69
+#             # b = [0] * 69
+#             colors = [r, g, b]
+#             data = json.dumps(colors)
+#             clientsocket.sendall(pack_msg(data))
+
+#         except Exception as e:
+#             print(e)
+
+
+# if __name__ == '__main__':
+#     _handle_stdin()

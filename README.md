@@ -50,3 +50,17 @@ export PYTHONPATH=".:build/lib.linux-armv7l-2.7"
 
 Ready to use
 `git clone https://github.com/EinariTuukkanen/led-animations.git`
+
+--
+
+Visualization requirements
+
+
+pip
+gcc
+portaudio
+
+numpy
+scipy
+pyaudio
+pyqtgraph
