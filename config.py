@@ -34,5 +34,7 @@ class Area:
 
 # Configure areas for the led system
 AREAS = {
-    'olohuone': Area('olohuone', 31, 100)
+    'olohuone': Area('olohuone', 31, 100),
+    'olohuone_left': Area('olohuone_left', 31, 65),
+    'olohuone_right': Area('olohuone_right', 66, 100)
 }
