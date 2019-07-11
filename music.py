@@ -8,25 +8,20 @@ import random
 import colorsys
 
 import numpy as np
+import sounddevice as sd
 
 import config as cfg
-
 
 sock = socket.socket(
     socket.AF_INET,     # Internet
     socket.SOCK_DGRAM   # UDP
 )
-print('Connected to server', sock)
 
-room = cfg.AREAS['olohuone']
-rooml = cfg.AREAS['olohuone_left']
-roomr = cfg.AREAS['olohuone_right']
+room = cfg.AREAS['room']
 
 
-def set_colors(areas, colors):
-    data = {'areas': areas, 'colors': colors}
-    # print(sock)
-    # print(colors)
+def update_colors(area, colors):
+    data = {'area': area.name, 'colors': colors}
     sock.sendto(json.dumps(data).encode(), (cfg.UDP_IP, cfg.UDP_PORT))
 
 
@@ -59,6 +54,89 @@ def int_or_str(text):
         return text
 
 
+def main(parser, room):
+    try:
+        if args.list_devices:
+            print(sd.query_devices())
+            parser.exit(0)
+
+        samplerate = sd.query_devices(args.device, 'input')[
+            'default_samplerate']
+
+        delta_f = (high - low) / (room.led_count - 1)
+        fftsize = math.ceil(samplerate / delta_f)
+        # low_bin = math.floor(low / delta_f)
+
+        # For smoothing, we keep our previous values
+        previous_values = [0] * room.led_count
+        smoothing = args.smoothing ** (1 / 8)
+
+        def audio_callback(indata, frames, time, status):
+            if any(indata):
+                # Do Fast Fourier Transform on the audio data
+                magnitude = np.abs(np.fft.rfft(indata[:, 0], n=fftsize))
+                magnitude *= args.gain / fftsize
+
+                # Take only the frequencies we're interested in
+                grouped = [[] for i in range(room.led_count)]
+                for i, x in enumerate(
+                        magnitude[int(low // delta_f):int(high // delta_f)]):
+                    grouped[int(i)].append(x)
+
+                # This scales the actual freqency magnitudes so that lower
+                # magnitudes get picked up better, especially on higher freqs
+                # where magnitudes are lower despite sounding as powerful as
+                # the lower ones, due to logarithmic perception of sound in
+                # humans. I suck at DSP, so take with a grain of salt.
+                for i, x in enumerate(grouped):
+                    if len(x) > 0 and np.max(x) > 0:
+                        grouped[i] = ((i + 1) / room.led_count) * \
+                            args.gain * abs(np.max(x)) ** 2
+                    else:
+                        grouped[i] = 0
+                
+                colors = []
+                # Thanks to batching our operations, we'll append every
+                # LED's update call into a single packet
+                for i, x in enumerate(grouped):
+                    previous = previous_values[i]
+                    value = np.clip(x, 1 / 255, 1)
+
+                    #  Smooth the value
+                    if value < previous:
+                        value = previous * smoothing + x * (1 - smoothing)
+                    br = value
+                    previous_values[i] = value
+
+                    # Calculate pixel color on an 256 segment rainbow
+                    pos = (i * 256 // room.led_count)
+                    r, g, b = rainbow(pos & 255)
+
+                    # Apply brightness (magnitude from FFT)
+                    r = math.ceil(r * br)
+                    g = math.ceil(g * br)
+                    b = math.ceil(b * br)
+
+                    colors.append([r, g, b])
+                update_colors(room.name, colors)
+
+        with sd.InputStream(
+                device=args.device,channels=1,
+                callback=audio_callback,
+                blocksize=int(samplerate * args.block_duration / 1000),
+                samplerate=samplerate):
+            print('Successfully started InputStream')
+            while True:
+                response = input()
+                if response in ('', 'q', 'Q'):
+                    break
+
+    except KeyboardInterrupt:
+        parser.exit('Stopped')
+    except Exception as e:
+        parser.exit(type(e).__name__ + ': ' + str(e))
+
+
 # Arguments
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('-l', '--list-devices', action='store_true',
@@ -82,94 +160,5 @@ low, high = args.range
 if high <= low:
     parser.error('HIGH must be greater than LOW')
 
-
-def main():
-    try:
-        import sounddevice as sd
-
-        if args.list_devices:
-            print(sd.query_devices())
-            parser.exit(0)
-
-        samplerate = sd.query_devices(args.device, 'input')[
-            'default_samplerate']
-
-        delta_f = (high - low) / (rooml.led_count - 1)
-        fftsize = math.ceil(samplerate / delta_f)
-        low_bin = math.floor(low / delta_f)
-
-        # For smoothing, we keep our previous values
-        previous_values = [0] * rooml.led_count
-
-        smoothing = args.smoothing ** (1 / 8)
-
-        def audio_callback(indata, frames, time, status):
-            if any(indata):
-                # Do fast Fourier Transform on the audio data
-                magnitude = np.abs(np.fft.rfft(indata[:, 0], n=fftsize))
-                magnitude *= args.gain / fftsize
-
-                # Take only the frequencies we're interested in
-                grouped = [[] for i in range(rooml.led_count)]
-                for i, x in enumerate(
-                        magnitude[int(low // delta_f):int(high // delta_f)]):
-                    grouped[int(i)].append(x)
-
-                # This scales the actual freqency magnitudes so that lower
-                # magnitudes get picked up better, especially on higher freqs
-                # where magnitudes are lower despite sounding as powerful as
-                # the lower ones, due to logarithmic perception of sound in
-                # humans. I suck at DSP, so take with a grain of salt.
-                for i, x in enumerate(grouped):
-                    if len(x) > 0 and np.max(x) > 0:
-                        grouped[i] = ((i + 1) / rooml.led_count) * \
-                            args.gain * abs(np.max(x)) ** 2
-                    else:
-                        grouped[i] = 0
-                
-                colors = []
-                # Thanks to batching our operations, we'll append every
-                # LED's update call into a single packet
-                for i, x in enumerate(grouped):
-                    previous = previous_values[i]
-                    value = np.clip(x, 1 / 255, 1)
-
-                    #  Smooth the value
-                    if value < previous:
-                        value = previous * smoothing + x * (1 - smoothing)
-                    br = value
-                    previous_values[i] = value
-
-                    # Calculate pixel color on an 256 segment rainbow
-                    pos = (i * 256 // rooml.led_count)
-                    r, g, b = rainbow(pos & 255)
-
-                    # Apply brightness (magnitude from FFT)
-                    r = math.ceil(r * br)
-                    g = math.ceil(g * br)
-                    b = math.ceil(b * br)
-
-                    colors.append([r, g, b])
-                
-                # set_colors([rooml.name], list(reversed(colors)))
-                set_colors([room.name], list(reversed(colors)) + colors + [[0, 0, 0]])
-
-        with sd.InputStream(device=args.device, channels=1,
-                            callback=audio_callback,
-                            blocksize=int(
-                                samplerate * args.block_duration / 1000),
-                            samplerate=samplerate):
-            print('Started stream')
-            while True:
-                response = input()
-                if response in ('', 'q', 'Q'):
-                    break
-
-    except KeyboardInterrupt:
-        parser.exit('Stopped')
-    except Exception as e:
-        parser.exit(type(e).__name__ + ': ' + str(e))
-
-
-sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-main()
+if __name__ == '__main__':
+    main(parser, room)
