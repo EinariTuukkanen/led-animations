@@ -1,4 +1,3 @@
-
 # IP address of the server (UDP)
 UDP_IP = '192.168.1.220'
 
@@ -35,6 +34,4 @@ class Area:
 # Configure areas for the led system
 AREAS = {
     'olohuone': Area('olohuone', 31, 100),
-    'olohuone_left': Area('olohuone_left', 31, 65),
-    'olohuone_right': Area('olohuone_right', 66, 100)
 }

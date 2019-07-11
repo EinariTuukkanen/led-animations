@@ -1,6 +1,5 @@
 # !/usr/bin/python3
 import tkinter as tk
-# from threading import Thread
 
 
 class VirtualLedStrip:
@@ -34,8 +33,3 @@ class VirtualLedStrip:
     def set_colors(self, colors):
         for i, pixel in enumerate(self.pixels):
             self.canvas.itemconfig(pixel, fill=colors[i])
-
-
-# strip = VirtualLedStrip(1000, 10, 100)
-# strip.start()
-# print('hello')
