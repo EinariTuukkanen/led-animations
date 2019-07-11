@@ -1,8 +1,3 @@
-
-import board
-
-GPIO_PIN = board.D18
-
 # IP address of the server (UDP)
 UDP_IP = '192.168.1.107'
 

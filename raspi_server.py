@@ -2,10 +2,11 @@ import json
 import socket
 
 import neopixel
+import board
 
 import config as cfg
 
-pixels = neopixel.NeoPixel(cfg.GPIO_PIN, cfg.TOTAL_LED_COUNT, auto_write=False)
+pixels = neopixel.NeoPixel(board.D18, cfg.TOTAL_LED_COUNT, auto_write=False)
 
 
 if __name__ == '__main__':
