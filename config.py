@@ -4,7 +4,7 @@ import board
 GPIO_PIN = board.D18
 
 # IP address of the server (UDP)
-UDP_IP = '192.168.1.220'
+UDP_IP = '192.168.1.107'
 
 # Port number used for UDP socket communication
 UDP_PORT = 5005
