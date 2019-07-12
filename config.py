@@ -4,7 +4,7 @@ UDP_IP = '10.88.20.181'
 # Port number used for UDP socket communication
 UDP_PORT = 5005
 
-TOTAL_LED_COUNT = 1000
+TOTAL_LED_COUNT = 1031
 
 
 class Area:
@@ -22,5 +22,5 @@ class Area:
 
 # Configure areas for the led system
 AREAS = {
-    'room': Area('room', 1, 1000)
+    'room': Area('room', 1, TOTAL_LED_COUNT)
 }
