@@ -3,9 +3,6 @@ import argparse
 import math
 import socket
 import json
-import time
-import random
-import colorsys
 
 import numpy as np
 import sounddevice as sd
