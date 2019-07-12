@@ -94,7 +94,7 @@ def main(parser, room):
                             args.gain * abs(np.max(x)) ** 2
                     else:
                         grouped[i] = 0
-                
+
                 colors = []
                 # Thanks to batching our operations, we'll append every
                 # LED's update call into a single packet
@@ -118,10 +118,10 @@ def main(parser, room):
                     b = math.ceil(b * br)
 
                     colors.append([r, g, b])
-                update_colors(room.name, colors)
+                update_colors(room, colors)
 
         with sd.InputStream(
-                device=args.device,channels=1,
+                device=args.device, channels=1,
                 callback=audio_callback,
                 blocksize=int(samplerate * args.block_duration / 1000),
                 samplerate=samplerate):
