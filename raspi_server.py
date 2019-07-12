@@ -6,7 +6,8 @@ import board
 
 import config as cfg
 
-pixels = neopixel.NeoPixel(board.D18, cfg.TOTAL_LED_COUNT, auto_write=False)
+pixels = neopixel.NeoPixel(
+    board.D18, cfg.TOTAL_LED_COUNT, auto_write=False, bpp=4)
 
 
 if __name__ == '__main__':
