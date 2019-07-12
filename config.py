@@ -17,7 +17,6 @@ class Area:
     def update_colors(self, pixels, colors):
         for i, color in enumerate(colors):
             pixels[self.start_index + i] = color
-        pixels.show()
 
 
 # Configure areas for the led system
