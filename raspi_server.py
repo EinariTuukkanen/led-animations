@@ -1,3 +1,5 @@
+import threading
+import time
 import json
 import socket
 
@@ -10,6 +12,12 @@ pixels = neopixel.NeoPixel(
     board.D18, cfg.TOTAL_LED_COUNT, auto_write=False, bpp=4)
 
 
+def update_loop(pixels):
+    pixels.show()
+    time.sleep(0.01)
+    update_loop(pixels)
+
+
 if __name__ == '__main__':
     sock = socket.socket(
         socket.AF_INET,     # Internet
@@ -17,8 +25,16 @@ if __name__ == '__main__':
     )
     sock.bind((cfg.UDP_IP, cfg.UDP_PORT))
 
+    t = threading.Thread(target=update_loop, args=(pixels, ))
+    t.start()
+
     while True:
         raw_data, addr = sock.recvfrom(2**14)  # TODO: decide good buffer size
         data = json.loads(raw_data.decode('utf-8'))
         area = cfg.AREAS[data['area']]
-        area.update_colors(pixels, data['colors'])
+        colors = data['colors']
+        m = area.led_count // len(colors)
+        colors2 = []
+        for c in colors:
+            colors2 += [c] * m
+        area.update_colors(pixels, colors2)
