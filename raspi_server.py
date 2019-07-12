@@ -37,4 +37,5 @@ if __name__ == '__main__':
         colors2 = []
         for c in colors:
             colors2 += [c] * m
+        print(colors[10])
         area.update_colors(pixels, colors2)
