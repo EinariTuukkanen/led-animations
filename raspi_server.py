@@ -1,7 +1,7 @@
+import threading
 import time
 import json
 import socket
-import threading
 
 import neopixel
 import board
@@ -25,9 +25,8 @@ if __name__ == '__main__':
     )
     sock.bind((cfg.UDP_IP, cfg.UDP_PORT))
 
-    last_update = time.time()
-    # t = threading.Thread(target=update_loop, args=(pixels, ))
-    # t.start()
+    t = threading.Thread(target=update_loop, args=(pixels, ))
+    t.start()
 
     while True:
         raw_data, addr = sock.recvfrom(2**14)  # TODO: decide good buffer size
@@ -39,8 +38,3 @@ if __name__ == '__main__':
         for c in colors:
             colors2 += [c] * m
         area.update_colors(pixels, colors2)
-        should_update = time.time()
-        print(colors[10])
-        if should_update - last_update >= 0.05:
-            last_update = should_update
-            pixels.show()
