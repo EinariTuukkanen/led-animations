@@ -27,6 +27,7 @@ if __name__ == '__main__':
 
     t = threading.Thread(target=update_loop, args=(pixels, ))
     t.start()
+    last = time.time()
 
     while True:
         raw_data, addr = sock.recvfrom(2**14)  # TODO: decide good buffer size
@@ -39,3 +40,7 @@ if __name__ == '__main__':
             colors2 += [c] * m
         print(colors[10])
         area.update_colors(pixels, colors2)
+        new = time.time()
+        if new - last >= 0.05:
+            last = new
+            pixels.show()
